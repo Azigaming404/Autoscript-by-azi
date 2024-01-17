@@ -10,8 +10,7 @@ ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 
 # install udp-custom
 echo downloading udp-custom
-wget -q --show-progress --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1ixz82G_ruRBnEEp4vLPNF2KZ1k8UfrkV' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1ixz82G_ruRBnEEp4vLPNF2KZ1k8UfrkV" -O /root/udp/udp-custom && rm -rf /tmp/cookies.txt
-chmod +x /root/udp/udp-custom
+wget -q -O /root/udp/udp-custom "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/main/udp/udp-custom-linux-amd64" && chmod +x /root/udp/udp-custom
 
 echo downloading default config
 wget -q -O /root/udp/config.json "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/main/udp/config.json" && chmod 644 /root/udp/config.json
@@ -56,5 +55,3 @@ systemctl start udp-custom &>/dev/null
 echo enable service udp-custom
 systemctl enable udp-custom &>/dev/null
 
-echo reboot
-reboot
