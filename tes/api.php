@@ -95,6 +95,12 @@ function executeScript($scriptPath, $username, $masaaktif, $quota, $ip, $path) {
     $command2 = escapeshellcmd("/usr/bin/sudo /usr/bin/systemctl restart xray");
 $output2 = shell_exec($command2);
 
+    $command3 = escapeshellcmd("sudo systemctl restart xray");
+$output3 = shell_exec($command3);
+
+    
+
+    
 
     // Log perintah dan output untuk debugging (opsional)
     error_log("Command: $command");
