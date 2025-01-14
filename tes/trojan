@@ -11,7 +11,7 @@ until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${user_EXISTS} == '0' ]]; do
   echo -e " \e[1;97;101m            ADD TROJAN ACCOUNT            \e[0m"  
   echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 
-  #read -p "User: " user
+  user=$1
   user_EXISTS=$(grep -w $user /etc/xray/config.json | wc -l)
 
   if [[ ${user_EXISTS} == '1' ]]; then
@@ -23,17 +23,15 @@ until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${user_EXISTS} == '0' ]]; do
     echo "A client with the specified name was already created, please choose another name."
     echo ""
     echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-    read -n 1 -s -r -p "Press [ enter ] to back on menu trojan"
-    trojan
+    exit 0
+systemctl restart cybervpn
   fi
 done
 uuid=$(cat /proc/sys/kernel/random/uuid)
-user=$1         # Username diambil dari argumen pertama
-masaaktif=$2    # Masa aktif diambil dari argumen kedua
-Quota=$3        # Quota diambil dari argumen ketiga
-ip=$4           # IP diambil dari argumen keempat
-
-echo $ip > /etc/kyt/limit/trojan/ip/${user}
+masaaktif=$2
+Quota=$3
+ip=$4
+echo $ip > /etc/cybervpn/limit/trojan/ip/${user}
 
 tgl=$(date -d "$masaaktif days" +"%d")
 bln=$(date -d "$masaaktif days" +"%b")
@@ -43,7 +41,18 @@ tgl2=$(date +"%d")
 bln2=$(date +"%b")
 thn2=$(date +"%Y")
 tnggl="$tgl2-$bln2-$thn2"
-exp=`date -d "$masaaktif days" +"%Y-%m-%d"`
+
+
+if [[ $user =~ ^Trial[A-Za-z0-9]+$ ]]; then
+    exp=$(date -d "$masaaktif days" +"%d-%b-%Y")
+    expi=$(date -d "$masaaktif hour" +"%H:%M:%S")
+    echo "# $user $expi" >> /etc/trialxray.txt
+else
+    exp=$(date -d "$masaaktif days" +"%d-%b-%Y")
+fi
+
+
+
 sed -i '/#trojanws$/a\#! '"$user $exp"'\
 },{"password": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
 sed -i '/#trojangrpc$/a\#! '"$user $exp"'\
@@ -112,7 +121,7 @@ d=$((${c} * 1024 * 1024 * 1024))
 if [[ ${c} != "0" ]]; then
   echo "${d}" >/etc/trojan/${user}
 fi
-DATADB=$(cat /etc/trojan/.trojan.db | grep "^#tr#" | grep -w "${user}" | awk '{print $2}')
+DATADB=$(cat /etc/trojan/.trojan.db | grep "^#!" | grep -w "${user}" | awk '{print $2}')
 if [[ "${DATADB}" != '' ]]; then
   sed -i "/\b${user}\b/d" /etc/trojan/.trojan.db
 fi
