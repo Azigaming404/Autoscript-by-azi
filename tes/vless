@@ -1,21 +1,20 @@
 #!/bin/bash
-clear
+
 red() { echo -e "\\033[32;1m${*}\\033[0m"; }
 domain=$(cat /etc/xray/domain)
 PUB=$(cat /etc/slowdns/server.pub)
 CITY=$(cat /etc/xray/city)
 NS=$(cat /etc/xray/dns)
-clear
 until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
   echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
   echo -e " \e[1;97;101m            ADD VLESS ACCOUNT           \e[0m"
   echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 
- # read -p "User: " user
+ 
   CLIENT_EXISTS=$(grep -w $user /etc/xray/config.json | wc -l)
 
   if [[ ${CLIENT_EXISTS} == '1' ]]; then
-    clear
+  
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
     echo -e " \e[1;97;101m            ADD VLESS ACCOUNT           \e[0m"
     echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
@@ -35,7 +34,7 @@ ip=$4           # IP diambil dari argumen keempat
 
 echo $ip > /etc/kyt/limit/vless/ip/${user}
 
-#read -p "     Limit User (IP)  : " iplim
+
 tgl=$(date -d "$masaaktif days" +"%d")
 bln=$(date -d "$masaaktif days" +"%b")
 thn=$(date -d "$masaaktif days" +"%Y")
@@ -154,7 +153,7 @@ echo "#& ${user} ${expe} ${status} ${uuid} ${Quota}" >>/etc/vless/.vless.db
 
 echo "#& ${user} ${expe}" >>/etc/rizkihdyt/vl
 
-clear
+
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e " \e[1;97;101m       SUCCES CREAT VLESS ACCOUNT       \e[0m"
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
