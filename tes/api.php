@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Fungsi untuk menangani SSH
 function handleSsh($username, $password, $masaaktif, $ip) {
-    $scriptPath = '/usr/bin/ssh-account';
+    $scriptPath = '/usr/bin/addssh';
     executeSshScript($scriptPath, $username, $password, $masaaktif, $ip);
 }
 
