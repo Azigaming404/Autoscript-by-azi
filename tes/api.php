@@ -74,16 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Fungsi untuk menangani SSH
 
 function handleSsh($username, $password, $masaaktif, $ip) {
-    // Validasi input
-    if (empty($username) || empty($password) || empty($masaaktif) || empty($ip)) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Parameter (username, password, masaaktif, ip) tidak boleh kosong.'
-        ]);
-        exit;
-    }
-
-    // Format tanggal kedaluwarsa akun berdasarkan $masaaktif
     $expiryDate = shell_exec("date -d '+$masaaktif days' '+%Y-%m-%d'");
     if (!$expiryDate) {
         echo json_encode([
@@ -93,27 +83,26 @@ function handleSsh($username, $password, $masaaktif, $ip) {
         exit;
     }
 
-    // Menjalankan perintah untuk membuat akun SSH
-    $createUser = shell_exec("useradd -e $expiryDate -s /bin/false -M $username");
+    // Menjalankan perintah useradd
+    $createUser = shell_exec("sudo useradd -e $expiryDate -s /bin/false -M $username 2>&1");
     if (!$createUser && !posix_getpwnam($username)) {
         echo json_encode([
             'status' => 'error',
-            'message' => 'Gagal membuat akun SSH.'
+            'message' => "Gagal membuat akun SSH: $createUser"
         ]);
         exit;
     }
 
-    // Mengatur password untuk akun SSH
-    $setPassword = shell_exec("echo -e '$password\n$password' | passwd $username &> /dev/null");
+    // Menjalankan perintah passwd
+    $setPassword = shell_exec("echo -e '$password\n$password' | sudo passwd $username 2>&1");
     if (!$setPassword) {
         echo json_encode([
             'status' => 'error',
-            'message' => 'Gagal mengatur password untuk akun SSH.'
+            'message' => "Gagal mengatur password akun SSH: $setPassword"
         ]);
         exit;
     }
 
-    // Mengambil informasi tanggal kedaluwarsa akun
     $expiryInfo = shell_exec("chage -l $username | grep 'Account expires' | awk -F': ' '{print $2}'");
     if (!$expiryInfo) {
         echo json_encode([
@@ -123,7 +112,6 @@ function handleSsh($username, $password, $masaaktif, $ip) {
         exit;
     }
 
-    // Menyimpan informasi IP ke file konfigurasi
     $ipPath = "/etc/cybervpn/limit/ssh/ip/$username";
     if (!file_put_contents($ipPath, $ip)) {
         echo json_encode([
@@ -133,7 +121,6 @@ function handleSsh($username, $password, $masaaktif, $ip) {
         exit;
     }
 
-    // Response sukses
     echo json_encode([
         'status' => 'success',
         'path' => 'ssh',
