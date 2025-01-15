@@ -72,26 +72,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Fungsi untuk menangani SSH
+
 function handleSsh($username, $password, $masaaktif, $ip) {
-    // Menentukan tanggal kedaluwarsa akun berdasarkan $masaaktif
+    // Validasi input
+    if (empty($username) || empty($password) || empty($masaaktif) || empty($ip)) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Parameter (username, password, masaaktif, ip) tidak boleh kosong.'
+        ]);
+        exit;
+    }
+
+    // Format tanggal kedaluwarsa akun berdasarkan $masaaktif
     $expiryDate = shell_exec("date -d '+$masaaktif days' '+%Y-%m-%d'");
+    if (!$expiryDate) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Gagal menentukan tanggal kedaluwarsa akun.'
+        ]);
+        exit;
+    }
 
     // Menjalankan perintah untuk membuat akun SSH
-    shell_exec("useradd -e $expiryDate -s /bin/false -M $username");
+    $createUser = shell_exec("useradd -e $expiryDate -s /bin/false -M $username");
+    if (!$createUser && !posix_getpwnam($username)) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Gagal membuat akun SSH.'
+        ]);
+        exit;
+    }
 
     // Mengatur password untuk akun SSH
-    shell_exec("echo -e '$password\n$password' | passwd $username &> /dev/null");
+    $setPassword = shell_exec("echo -e '$password\n$password' | passwd $username &> /dev/null");
+    if (!$setPassword) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Gagal mengatur password untuk akun SSH.'
+        ]);
+        exit;
+    }
 
     // Mengambil informasi tanggal kedaluwarsa akun
     $expiryInfo = shell_exec("chage -l $username | grep 'Account expires' | awk -F': ' '{print $2}'");
+    if (!$expiryInfo) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Gagal mendapatkan informasi tanggal kedaluwarsa akun.'
+        ]);
+        exit;
+    }
 
     // Menyimpan informasi IP ke file konfigurasi
-    file_put_contents("/etc/cybervpn/limit/ssh/ip/$username", $ip);
+    $ipPath = "/etc/cybervpn/limit/ssh/ip/$username";
+    if (!file_put_contents($ipPath, $ip)) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Gagal menyimpan informasi IP.'
+        ]);
+        exit;
+    }
 
-    // Menampilkan tanggal kedaluwarsa untuk pengecekan
-    return $expiryInfo;
+    // Response sukses
+    echo json_encode([
+        'status' => 'success',
+        'path' => 'ssh',
+        'username' => $username,
+        'expiry_date' => trim($expiryInfo),
+        'ip' => $ip
+    ]);
 }
-
 
 // Fungsi untuk menangani Vmess
 function handleVmess($username, $masaaktif, $quota, $ip) {
