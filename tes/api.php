@@ -73,9 +73,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Fungsi untuk menangani SSH
 function handleSsh($username, $password, $masaaktif, $ip) {
-    $scriptPath = '/usr/bin/addssh';
-    executeSshScript($scriptPath, $username, $password, $masaaktif, $ip);
+    // Menentukan tanggal kedaluwarsa akun berdasarkan $masaaktif
+    $expiryDate = shell_exec("date -d '+$masaaktif days' '+%Y-%m-%d'");
+
+    // Menjalankan perintah untuk membuat akun SSH
+    shell_exec("useradd -e $expiryDate -s /bin/false -M $username");
+
+    // Mengatur password untuk akun SSH
+    shell_exec("echo -e '$password\n$password' | passwd $username &> /dev/null");
+
+    // Mengambil informasi tanggal kedaluwarsa akun
+    $expiryInfo = shell_exec("chage -l $username | grep 'Account expires' | awk -F': ' '{print $2}'");
+
+    // Menyimpan informasi IP ke file konfigurasi
+    file_put_contents("/etc/cybervpn/limit/ssh/ip/$username", $ip);
+
+    // Menampilkan tanggal kedaluwarsa untuk pengecekan
+    return $expiryInfo;
 }
+
 
 // Fungsi untuk menangani Vmess
 function handleVmess($username, $masaaktif, $quota, $ip) {
