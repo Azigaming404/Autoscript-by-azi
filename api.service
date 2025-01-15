@@ -1,10 +1,10 @@
 [Unit]
-Description=swiftguard lite
+Description=CyberVPN Network
 After=network.target
 
 [Service]
 WorkingDirectory=/root
-ExecStart=/usr/bin/node api.js
+ExecStart=/usr/bin/python3 ssh.py
 Restart=always
 
 [Install]
