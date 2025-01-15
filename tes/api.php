@@ -73,62 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Fungsi untuk menangani SSH
 
-function handleSsh($username, $password, $masaaktif, $ip) {
-    $expiryDate = shell_exec("date -d '+$masaaktif days' '+%Y-%m-%d'");
-    if (!$expiryDate) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Gagal menentukan tanggal kedaluwarsa akun.'
-        ]);
-        exit;
-    }
 
-    // Menjalankan perintah useradd
-    $createUser = shell_exec("sudo useradd -e $expiryDate -s /bin/false -M $username 2>&1");
-    if (!$createUser && !posix_getpwnam($username)) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => "Gagal membuat akun SSH: $createUser"
-        ]);
-        exit;
-    }
-
-    // Menjalankan perintah passwd
-    $setPassword = shell_exec("echo -e '$password\n$password' | sudo passwd $username 2>&1");
-    if (!$setPassword) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => "Gagal mengatur password akun SSH: $setPassword"
-        ]);
-        exit;
-    }
-
-    $expiryInfo = shell_exec("chage -l $username | grep 'Account expires' | awk -F': ' '{print $2}'");
-    if (!$expiryInfo) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Gagal mendapatkan informasi tanggal kedaluwarsa akun.'
-        ]);
-        exit;
-    }
-
-    $ipPath = "/etc/cybervpn/limit/ssh/ip/$username";
-    if (!file_put_contents($ipPath, $ip)) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Gagal menyimpan informasi IP.'
-        ]);
-        exit;
-    }
-
-    echo json_encode([
-        'status' => 'success',
-        'path' => 'ssh',
-        'username' => $username,
-        'expiry_date' => trim($expiryInfo),
-        'ip' => $ip
-    ]);
-}
 
 // Fungsi untuk menangani Vmess
 function handleVmess($username, $masaaktif, $quota, $ip) {
