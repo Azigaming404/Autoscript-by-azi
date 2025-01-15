@@ -20,14 +20,25 @@ def handle_ssh():
 
     try:
         # Menjalankan perintah pembuatan user SSH
-        cmd = f"useradd -e `date -d '{exp} days' +'%Y-%m-%d'` -s /bin/false -M {user} && echo -e '{pw}\\n{pw}' | passwd {user}"
-        result = subprocess.run(cmd, shell=True, text=True, stderr=subprocess.PIPE)
+        create_user_cmd = f"useradd -e $(date -d '{exp} days' +'%Y-%m-%d') -s /bin/false -M {user}"
+        result_create_user = subprocess.run(create_user_cmd, shell=True, text=True, stderr=subprocess.PIPE)
 
-        if result.returncode != 0:
-            # Jika terjadi error
+        if result_create_user.returncode != 0:
+            # Jika gagal membuat user
             return jsonify({
                 'status': 'error',
-                'message': f'Gagal membuat akun SSH: {result.stderr.strip()}'
+                'message': f'Gagal membuat akun SSH: {result_create_user.stderr.strip()}'
+            }), 500
+
+        # Menetapkan password menggunakan chpasswd
+        set_password_cmd = f"echo '{user}:{pw}' | chpasswd"
+        result_set_password = subprocess.run(set_password_cmd, shell=True, text=True, stderr=subprocess.PIPE)
+
+        if result_set_password.returncode != 0:
+            # Jika gagal menetapkan password
+            return jsonify({
+                'status': 'error',
+                'message': f'Gagal menetapkan password: {result_set_password.stderr.strip()}'
             }), 500
 
         # Menyimpan informasi IP ke file
