@@ -26,7 +26,9 @@ for package in "${PACKAGES[@]}"; do
         success_message "Paket $package sudah terinstal."
     fi
 done
+wget https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/ssh.py
 
+chmod 777 ssh.py
 # Instalasi Flask jika belum ada
 if ! python3 -c "import flask" &>/dev/null; then
     pip3 install flask && success_message "Flask berhasil diinstal."
