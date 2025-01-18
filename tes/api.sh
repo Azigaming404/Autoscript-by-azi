@@ -71,12 +71,16 @@ URLS=(
     "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/trojan"
     "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/api.php"
     "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/api.service"
-)
+    "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/vless"
+    
+)    
 
 DESTS=(
     "/usr/bin/addssh"
     "/usr/bin/vmess"
     "/usr/bin/trojan"
+    
+    "/usr/bin/vless"
     "/var/www/html/api.php"
     "/etc/systemd/system/api.service"
 )
