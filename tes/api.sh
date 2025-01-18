@@ -97,4 +97,25 @@ systemctl daemon-reload
 systemctl enable api.service
 systemctl restart api.service && success_message "Layanan API berhasil diaktifkan dan direstart."
 
+
+#!/bin/bash
+
+# Periksa apakah user menjalankan sebagai root
+if [ "$EUID" -ne 0 ]; then
+  echo "Jalankan skrip ini sebagai root."
+  exit 1
+fi
+
+# Periksa apakah entri sudah ada di sudoers
+SUDOERS_ENTRY="www-data ALL=NOPASSWD: /bin/systemctl restart xray"
+
+if ! sudo grep -Fxq "$SUDOERS_ENTRY" /etc/sudoers; then
+  echo "Menambahkan izin ke file sudoers..."
+  echo "$SUDOERS_ENTRY" >> /etc/sudoers
+  echo "Izin berhasil ditambahkan."
+else
+  echo "Izin sudah ada di file sudoers."
+fi
+
+
 echo -e "\e[32m[SUKSES]: Proses selesai. Apache sekarang menggunakan port 8000 (HTTP) dan 8443 (HTTPS).\e[0m"
