@@ -1,4 +1,18 @@
 #!/bin/bash
+mkdir -p /etc/cybervpn/limit/vmess/ip/
+mkdir -p /etc/cybervpn/limit/vless/ip/
+mkdir -p /etc/cybervpn/limit/trojan/ip/
+mkdir -p /etc/cybervpn/limit/ssh/ip/
+mkdir -p /etc/cybervpn/limit/noobs/ip/
+
+mkdir -p /etc/vmess
+mkdir -p /etc/vless
+mkdir -p /etc/trojan
+mkdir -p /etc/limit/vmess
+mkdir -p /etc/limit/vless
+mkdir -p /etc/limit/trojan
+
+
 set -e  # Hentikan skrip jika ada error
 
 # Fungsi untuk mencetak pesan sukses
