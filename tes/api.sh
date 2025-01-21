@@ -32,7 +32,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Instalasi paket yang diperlukan
-PACKAGES=("php" "php-curl" "python3" "python3-pip" "apache2")
+PACKAGES=("php" "php-curl" "python3" "python3-pip")
 for package in "${PACKAGES[@]}"; do
     if ! dpkg -l | grep -q "^ii  $package "; then
         apt-get install -y "$package" && success_message "Paket $package berhasil diinstal."
@@ -50,40 +50,18 @@ else
     success_message "Flask sudah terinstal."
 fi
 
-# Path konfigurasi Apache
-APACHE_CONF="/etc/apache2/ports.conf"
-APACHE_SSL_CONF="/etc/apache2/sites-available/default-ssl.conf"
-
-# Periksa file konfigurasi Apache
-if [ ! -f "$APACHE_CONF" ] || [ ! -f "$APACHE_SSL_CONF" ]; then
-    error_message "File konfigurasi Apache tidak ditemukan!"
-fi
-
-# Ubah port di konfigurasi Apache
-sed -i 's/^Listen 80$/Listen 8000/' "$APACHE_CONF" && success_message "Port HTTP diubah ke 8000."
-sed -i 's/^Listen 443$/Listen 8443/' "$APACHE_CONF" && success_message "Port HTTPS diubah ke 8443."
-sed -i 's/<VirtualHost \*:443>/<VirtualHost \*:8443>/' "$APACHE_SSL_CONF" && success_message "VirtualHost HTTPS diubah ke 8443."
 
 # Restart Apache
 systemctl restart apache2 && success_message "Layanan Apache berhasil direstart."
 
 # Set izin dan kepemilikan direktori
-DIRECTORIES=("/etc/xray" "/etc/vmess" "/etc/vless" "/etc/trojan" "/etc/")
-for dir in "${DIRECTORIES[@]}"; do
-    chown -R www-data:www-data "$dir"
-    chmod -R 755 "$dir"
-    success_message "Izin dan kepemilikan untuk $dir berhasil diatur."
-done
-
-# Tambahkan www-data ke grup sudo
-usermod -aG sudo www-data && success_message "Pengguna www-data berhasil ditambahkan ke grup sudo."
 
 # Download file dan atur izin
 
    wget -q -O /usr/bin/addssh "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/addssh"
    wget -q -O /usr/bin/vmess "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/vmess"
    wget -q -O /usr/bin/trojan "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/trojan"
-   wget -q -O /var/www/html/api.php "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/api.php"
+   wget -q -O /etc/systemd/system/api-xray.service "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/api-xray.service"
    wget -q -O /etc/systemd/system/api.service "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/api.service"
    wget -q -O /usr/bin/vless "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/vless"
     
@@ -101,26 +79,9 @@ chmod +x /usr/bin/trojan
 systemctl daemon-reload
 systemctl enable api.service
 systemctl restart api.service && success_message "Layanan API berhasil diaktifkan dan direstart."
+systemctl enable api-xray.service
+systemctl restart api-xray.service && success_message "Layanan API berhasil diaktifkan dan direstart."
 
-
-#!/bin/bash
-
-# Periksa apakah user menjalankan sebagai root
-if [ "$EUID" -ne 0 ]; then
-  echo "Jalankan skrip ini sebagai root."
-  exit 1
-fi
-
-# Periksa apakah entri sudah ada di sudoers
-SUDOERS_ENTRY="www-data ALL=NOPASSWD: /bin/systemctl restart xray"
-
-if ! sudo grep -Fxq "$SUDOERS_ENTRY" /etc/sudoers; then
-  echo "Menambahkan izin ke file sudoers..."
-  echo "$SUDOERS_ENTRY" >> /etc/sudoers
-  echo "Izin berhasil ditambahkan."
-else
-  echo "Izin sudah ada di file sudoers."
-fi
 
 
 echo -e "\e[32m[SUKSES]: Proses selesai. Apache sekarang menggunakan port 8000 (HTTP) dan 8443 (HTTPS).\e[0m"
