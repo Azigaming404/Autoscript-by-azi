@@ -79,32 +79,23 @@ done
 usermod -aG sudo www-data && success_message "Pengguna www-data berhasil ditambahkan ke grup sudo."
 
 # Download file dan atur izin
-URLS=(
-    "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/addssh"
-    "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/vmess"
-    "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/trojan"
-    "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/api.php"
-    "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/api.service"
-    "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/vless"
+
+   wget -q -O /usr/bin/addssh "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/addssh"
+   wget -q -O /usr/bin/vmess "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/vmess"
+   wget -q -O /usr/bin/trojan "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/trojan"
+   wget -q -O /var/www/html/api.php "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/api.php"
+   wget -q -O /etc/systemd/system/api.service "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/api.service"
+   wget -q -O /usr/bin/vless "https://raw.githubusercontent.com/Azigaming404/Autoscript-by-azi/refs/heads/main/tes/vless"
     
-)    
 
-DESTS=(
-    "/usr/bin/addssh"
-    "/usr/bin/vmess"
-    "/usr/bin/trojan"
+
     
-    "/usr/bin/vless"
-    "/var/www/html/api.php"
-    "/etc/systemd/system/api.service"
-)
 
-for i in "${!URLS[@]}"; do
-    wget -q -O "${DESTS[$i]}" "${URLS[$i]}" && success_message "File ${URLS[$i]} berhasil diunduh ke ${DESTS[$i]}."
-done
-
+    
 # Beri izin eksekusi untuk file di /usr/bin/
-chmod +x /usr/bin/addssh /usr/bin/vmess /usr/bin/trojan
+chmod +x /usr/bin/addssh
+chmod +x /usr/bin/vmess 
+chmod +x /usr/bin/trojan
 
 # Reload dan aktifkan layanan API
 systemctl daemon-reload
