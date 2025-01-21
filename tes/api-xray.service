@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/root
-ExecStart=/usr/bin/node api.js
+ExecStart=/usr/bin/python3 api-xray.py
 Restart=always
 
 [Install]
