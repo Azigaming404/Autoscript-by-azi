@@ -10,28 +10,30 @@ cftn=$(cat /root/cloudfront)
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "                 ⇱ CREATE ACCOUNT ⇲            "
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-Login=$1
-if [ -z $Login ]; then
-menu-ssh
+
+read -p "Masukkan Username: " Login
+if [ -z "$Login" ]; then
+    menu-ssh
+    exit 0
 fi
 
-Pass=$2
-masaaktif=$3
-max=$4
+read -p "Masukkan Password: " Pass
+read -p "Masukkan Masa Aktif (hari): " masaaktif
+read -p "Masukkan Batas IP (minimal 2): " max
 
 if [ "$max" -eq 1 ]; then
-    echo "minimal limit ip 2"
+    echo "Minimal limit IP adalah 2"
     exit 0
 fi
 
 echo "$max" >/etc/cybervpn/limit/ssh/ip/$Login
 IP=$(wget -qO- ipinfo.io/ip)
-ws="$(cat ~/log-install.txt | grep -w "Websocket TLS" | cut -d: -f2 | sed 's/ //g')"
-ws2="$(cat ~/log-install.txt | grep -w "Websocket None TLS" | cut -d: -f2 | sed 's/ //g')"
-ssl="$(cat ~/log-install.txt | grep -w "Stunnel5" | cut -d: -f2)"
-sqd="$(cat ~/log-install.txt | grep -w "Squid" | cut -d: -f2)"
-ovpn="$(netstat -nlpt | grep -i openvpn | grep -i 0.0.0.0 | awk '{print $4}' | cut -d: -f2)"
-ovpn2="$(netstat -nlpu | grep -i openvpn | grep -i 0.0.0.0 | awk '{print $4}' | cut -d: -f2)"
+ws=$(grep -w "Websocket TLS" ~/log-install.txt | cut -d: -f2 | sed 's/ //g')
+ws2=$(grep -w "Websocket None TLS" ~/log-install.txt | cut -d: -f2 | sed 's/ //g')
+ssl=$(grep -w "Stunnel5" ~/log-install.txt | cut -d: -f2)
+sqd=$(grep -w "Squid" ~/log-install.txt | cut -d: -f2)
+ovpn=$(netstat -nlpt | grep -i openvpn | grep -i 0.0.0.0 | awk '{print $4}' | cut -d: -f2)
+ovpn2=$(netstat -nlpu | grep -i openvpn | grep -i 0.0.0.0 | awk '{print $4}' | cut -d: -f2)
 
 clear
 systemctl daemon-reload
@@ -54,7 +56,6 @@ systemctl restart dropbear-ohp
 systemctl restart openvpn-ohp
 
 useradd -e $(date -d "$masaaktif days" +"%Y-%m-%d") -s /bin/false -M $Login
-expi=$(chage -l $Login | grep "Account expires" | awk -F": " '{print $2}')
 echo -e "$Pass\n$Pass\n" | passwd $Login &> /dev/null
 hariini=$(date -d "0 days" +"%Y-%m-%d")
 expi=$(date -d "$masaaktif days" +"%Y-%m-%d")
@@ -68,7 +69,7 @@ echo "Username: $Login"
 echo "Password: $Pass"
 echo "Created: $hariini"
 echo "Expired: $expi"
-echo "limit ip: $max"
+echo "Limit IP: $max"
 echo "=================HOST-SSH===================="
 echo "IP/Host: $IP"
 echo "Domain SSH: $domain"
@@ -105,7 +106,6 @@ echo "Payload enanched"
 echo "=================================================="
 echo "PATCH /ssh-cybervpn HTTP/1.1[crlf]Host: [host][crlf]Host: ISIBUG[crlf]Upgrade: websocket[crlf]Connection: Upgrade[crlf]User-Agent: [ua][crlf][crlf]"
 echo "=================================================="
-echo "     Terimakasih sudah menggunakan" 
+echo "     Terimakasih sudah menggunakan"
 echo "        script premium SwiftGuard Lite"
 echo "=================================================="
-
