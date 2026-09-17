@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Katalog Jasa Pembuatan Website — Profesional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f7fb;
+      color: #1e293b;
+      line-height: 1.6;
+      padding: 2rem 1.5rem;
+    }
+
+    .catalog-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Header section */
+    .header {
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+    }
+
+    .header .price-date {
+      display: inline-block;
+      background: #e9eef4;
+      color: #334155;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      border: 1px solid #cdd9e9;
+      margin-top: 0.25rem;
+    }
+
+    .header .price-date strong {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    /* Grid katalog */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Card style */
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02), 0 4px 8px rgba(0, 0, 0, 0.02);
+      border: 1px solid #e7edf4;
+      padding: 1.5rem 1.5rem 1.75rem;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      border-color: #b9c8dd;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 40px;
+      background: #eef4ff;
+      color: #1e4f8a;
+      border: 1px solid #cbdffc;
+    }
+
+    .badge.garansi {
+      background: #eaf6ef;
+      color: #0b6e4f;
+      border-color: #b8e0cc;
+    }
+
+    .price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0b2b4e;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: #3e556e;
+      margin-bottom: 1.25rem;
+      border-left: 3px solid #d9e2f0;
+      padding-left: 0.85rem;
+    }
+
+    .card-desc strong {
+      font-weight: 600;
+      color: #1a3a5e;
+    }
+
+    .features-list {
+      list-style: none;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .features-list li {
+      font-size: 0.9rem;
+      padding: 0.4rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      color: #2c3f56;
+      border-bottom: 1px dashed #e1e9f2;
+    }
+
+    .features-list li:last-child {
+      border-bottom: none;
+    }
+
+    .check-icon {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: #e4effb;
+      border-radius: 6px;
+      color: #1d5b9e;
+      font-weight: 700;
+      font-size: 11px;
+      text-align: center;
+      line-height: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .note {
+      font-size: 0.78rem;
+      color: #6c7f94;
+      margin-top: 0.6rem;
+      padding-top: 0.6rem;
+      border-top: 1px solid #ecf1f7;
+    }
+
+    .note i {
+      font-style: normal;
+      background: #f3f7fc;
+      padding: 0.15rem 0.4rem;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+
+    /* section disclaimer / garansi */
+    .disclaimer-box {
+      background: #ffffff;
+      border: 1px solid #dde5ef;
+      border-radius: 18px;
+      padding: 1.75rem 2rem;
+      margin-top: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+    }
+
+    .disclaimer-box h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: #1d3b5e;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .disclaimer-box h2::before {
+      content: "⚖️";
+      font-size: 1.3rem;
+      font-weight: 400;
+    }
+
+    .disclaimer-box p {
+      font-size: 0.9rem;
+      color: #2d4058;
+      margin-bottom: 0.75rem;
+    }
+
+    .disclaimer-box .highlight {
+      background: #f0f5fe;
+      padding: 0.9rem 1.2rem;
+      border-radius: 14px;
+      border-left: 4px solid #1e5b9e;
+      font-weight: 500;
+      color: #113355;
+    }
+
+    .disclaimer-box .small-note {
+      font-size: 0.8rem;
+      color: #667e99;
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #d9e2ee;
+      margin: 1.2rem 0 0.8rem;
+      opacity: 0.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      body {
+        padding: 1.5rem 1rem;
+      }
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      .price {
+        font-size: 1.25rem;
+      }
+      .card {
+        padding: 1.25rem;
+      }
+      .disclaimer-box {
+        padding: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="catalog-container">
+    <!-- Header dengan tanggal perubahan harga -->
+    <div class="header">
+      <h1>Katalog Layanan Pengembangan Web</h1>
+      <div class="price-date">
+        📅 Harga berlaku per <strong>10 September</strong> (tahun berjalan)
+      </div>
+    </div>
+
+    <!-- Grid katalog utama -->
+    <div class="catalog-grid">
+      
+      <!-- Card 1: Paket website + domain hosting -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Full package</span>
+          <span class="price">Rp 2.300.000</span>
+        </div>
+        <div class="card-title">Website Siap Pakai + Domain & Hosting</div>
+        <div class="card-desc">
+          <strong>PPOB, data sekolah, data penjualan, web desa,</strong> dan lainnya.
+        </div>
+        <ul class="features-list">
+          <li><span class="check-icon">✓</span> Free domain + hosting</li>
+          <li><span class="check-icon">✓</span> Garansi 1 bulan</li>
+          <li><span class="check-icon">✓</span> Kustomisasi sesuai kebutuhan</li>
+          <li><span class="check-icon">✓</span> Instalasi & konfigurasi</li>
+        </ul>
+        <div class="note"><i>Garansi meliputi perbaikan error sesuai alur awal</i></div>
+      </div>
+
+      <!-- Card 2: Source code only -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Source code</span>
+          <span class="price">Rp 1.800.000</span>
+        </div>
+        <div class="card-title">Website Tanpa Hosting & Domain</div>
+        <div class="card-desc">
+          Hanya <strong>source code + tutorial instalasi</strong> (tanpa hosting/domain).
+        </div>
+        <ul class="features-list">
+          <li><span class="check-icon">✓</span> Source code lengkap</li>
+          <li><span class="check-icon">✓</span> Panduan instalasi step-by-step</li>
+          <li><span class="check-icon">✓</span> Garansi 1 bulan (error/bug)</li>
+          <li><span class="check-icon">✓</span> Support dasar via chat</li>
+        </ul>
+        <div class="note"><i>Garansi error/bug sesuai kesepakatan awal</i></div>
+      </div>
+
+      <!-- Card 3: Update fitur tampilan -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Update</span>
+          <span class="price">Rp 25.000</span>
+        </div>
+        <div class="card-title">Update Fitur Tampilan</div>
+        <div class="card-desc">
+          Perubahan <strong>UI/UX, layout, style</strong> tanpa mengubah database.
+        </div>
+        <ul class="features-list">
+          <li><span class="check-icon">✓</span> Revisi tampilan halaman</li>
+          <li><span class="check-icon">✓</span> Penyesuaian warna, font, komponen</li>
+          <li><span class="check-icon">✓</span> Pengerjaan cepat</li>
+        </ul>
+      </div>
+
+      <!-- Card 4: Update fitur database -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">Database</span>
+          <span class="price">Rp 50.000</span>
+        </div>
+        <div class="card-title">Update Fitur Berbasis Database</div>
+        <div class="card-desc">
+          Penambahan <strong>tabel, kolom, metadata,</strong> dan relasi data.
+        </div>
+        <ul class="features-list">
+          <li><span class="check-icon">✓</span> Perubahan skema database</li>
+          <li><span class="check-icon">✓</span> Penambahan field / tabel baru</li>
+          <li><span class="check-icon">✓</span> Migrasi data ringan</li>
+        </ul>
+      </div>
+
+      <!-- Card 5: Rest API Read only -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">API</span>
+          <span class="price">Rp 100.000</span>
+        </div>
+        <div class="card-title">Tambah REST API Sederhana</div>
+        <div class="card-desc">
+          <strong>Read-only,</strong> endpoint untuk mengambil data.
+        </div>
+        <ul class="features-list">
+          <li><span class="check-icon">✓</span> Endpoint GET</li>
+          <li><span class="check-icon">✓</span> Format JSON</li>
+          <li><span class="check-icon">✓</span> Dokumentasi singkat</li>
+        </ul>
+      </div>
+
+      <!-- Card 6: Rest API Full fitur -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge">API</span>
+          <span class="price">Rp 300.000</span>
+        </div>
+        <div class="card-title">REST API Full Fitur</div>
+        <div class="card-desc">
+          <strong>CRUD, pembelian, read,</strong> dan operasi lanjutan.
+        </div>
+        <ul class="features-list">
+          <li><span class="check-icon">✓</span> Create, Read, Update, Delete</li>
+          <li><span class="check-icon">✓</span> Endpoint pembelian / transaksi</li>
+          <li><span class="check-icon">✓</span> Autentikasi dasar & keamanan</li>
+          <li><span class="check-icon">✓</span> Dokumentasi API</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bagian Garansi & Ketentuan Profesional -->
+    <div class="disclaimer-box">
+      <h2>Ketentuan Garansi & Layanan</h2>
+      <p class="highlight">
+        Garansi 1 bulan hanya mencakup perbaikan error / bug sesuai alur awal pembuatan web 
+        dan kesepakatan. <strong>Tidak melayani penambahan fitur secara gratis</strong> 
+        dengan mengatasnamakan garansi.
+      </p>
+      <hr>
+      <p>
+        <strong>1.</strong> Garansi berlaku untuk error kode yang muncul pada fungsi yang sudah disepakati di awal.
+      </p>
+      <p>
+        <strong>2.</strong> Permintaan tambahan fitur di luar kesepakatan awal akan dikenakan biaya terpisah 
+        sesuai katalog di atas.
+      </p>
+      <p>
+        <strong>3.</strong> Segala bentuk perubahan spesifikasi setelah serah terima dianggap sebagai 
+        pengembangan baru.
+      </p>
+      <p class="small-note">
+        *Harga dapat berubah sewaktu-waktu. Harga yang tertera adalah harga per 10 September.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
